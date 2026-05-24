@@ -5,7 +5,8 @@
       "Bash(php artisan *)",
       "Bash(php -l routes/api.php)",
       "Bash(php -l app/Modules/Auth/Routes/api.php)",
-      "Bash(php -r \"require 'bootstrap/app.php';\")"
+      "Bash(php -r \"require 'bootstrap/app.php';\")",
+      "Read(//c/Users/julia/nuvora/frontend/**)"
     ]
   }
 }
