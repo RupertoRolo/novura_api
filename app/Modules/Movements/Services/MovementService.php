@@ -62,6 +62,8 @@ class MovementService
     public function update(Movement $movement, array $data): Movement
     {
         return DB::transaction(function () use ($movement, $data) {
+            $oldAccountId = $movement->financial_account_id;
+
             $movement->update($data);
 
             if (array_key_exists('tag_ids', $data)) {
@@ -69,6 +71,10 @@ class MovementService
             }
 
             $this->updateBalance($movement->financial_account_id);
+
+            if (isset($data['financial_account_id']) && (int) $data['financial_account_id'] !== $oldAccountId) {
+                $this->updateBalance($oldAccountId);
+            }
 
             return $movement->load(['category', 'subcategory', 'tags']);
         });
@@ -85,10 +91,12 @@ class MovementService
 
     private function updateBalance(int $accountId): void
     {
-        $balance = Movement::where('financial_account_id', $accountId)
-            ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) as balance")
-            ->value('balance') ?? 0;
+        $account = FinancialAccount::find($accountId);
 
-        FinancialAccount::where('id', $accountId)->update(['current_balance' => $balance]);
+        $movementsTotal = Movement::where('financial_account_id', $accountId)
+            ->selectRaw("SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) as total")
+            ->value('total') ?? 0;
+
+        $account->update(['current_balance' => $account->initial_balance + $movementsTotal]);
     }
 }

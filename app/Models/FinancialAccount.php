@@ -15,6 +15,7 @@ class FinancialAccount extends Model
         'user_id',
         'name',
         'type',
+        'initial_balance',
         'current_balance',
         'currency',
         'color',

@@ -15,6 +15,8 @@ class MovementResource extends JsonResource
         return [
             'id'                   => $this->id,
             'financial_account_id' => $this->financial_account_id,
+            'category_id'          => $this->category_id,
+            'subcategory_id'       => $this->subcategory_id,
             'type'                 => $this->type,
             'amount'               => (float) $this->amount,
             'description'          => $this->description,

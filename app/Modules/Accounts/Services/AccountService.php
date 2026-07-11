@@ -17,11 +17,14 @@ class AccountService
 
     public function store(User $user, array $data): FinancialAccount
     {
+        $initialBalance = $data['initial_balance'] ?? 0;
+
         return FinancialAccount::create([
             'user_id'         => $user->id,
             'name'            => $data['name'],
             'type'            => $data['type'],
-            'current_balance' => $data['initial_balance'] ?? 0,
+            'initial_balance' => $initialBalance,
+            'current_balance' => $initialBalance,
             'currency'        => $data['currency'] ?? 'COP',
             'color'           => $data['color'] ?? null,
             'icon'            => $data['icon'] ?? null,
